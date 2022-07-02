@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>云朵之家打卡站点</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script src="https://www.itxst.com/package/bootstrap-table-1.14.1/jquery-3.3.1/jquery.js"></script>
+    <link href="https://www.itxst.com/package/bootstrap-table-1.14.1/bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://www.itxst.com/package/bootstrap-table-1.14.1/bootstrap-table-1.14.1/bootstrap-table.css" rel="stylesheet" />
+    <script src="https://www.itxst.com/package/bootstrap-table-1.14.1/bootstrap-table-1.14.1/bootstrap-table.js"></script>
+</head>
+
+
+<body>
+    <div class="container">
+        <div class="jumbotron text-center">
+        <h1>云朵之家打卡站点</h1>
+        <p>坚持打卡, 养成良好的行为习惯!</p> 
+        <img src="../static/images/cloud.png" class="img-responsive center-block">
+  </div>
+    </div>
+
+<table class="table table-bordered">
+  <caption class="text-center">打卡勋章发放规则</caption>
+  <thead>
+    <tr>
+      <th>连续打卡时间</th>
+      <th>称号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>5天</td>
+      <td>高级自主规划大师</td>
+    </tr>
+    <tr>
+      <td>10天</td>
+      <td>特级自主规划大师</td>
+    </tr>
+    <tr>
+      <td>15天</td>
+      <td>冠军自主规划大师</td>
+    </tr>
+    <tr>
+      <td>21天</td>
+      <td>自主规划大师终生成就奖</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class = "col-md-offset-4 col-lg-offset-4col-xl-offset-4">
+    <form method="post" action="/upload_image" enctype="multipart/form-data">
+    <h3>提交打卡</h3>
+    <input type="file" name="photo">
+    <input type="text" placeholder="姓名" name="username">
+    <button style="margin-top: 10px" type="submit">提交信息</button>
+</form></div>
+<p></p>
+<h1>打卡排行榜</h1>
+<table class="table table-bordered" id="rank">
+  <caption>打卡排行榜</caption>
+  <tbody>
+      {% for stu in data %} 
+      <tr>
+            {% for ele in stu %}      
+                {% if ele == "已打卡" %}
+                    <td class = "success"> {{ele}} </td>
+                {% else %}
+                    <td> {{ele}} </td>
+                {% endif %}
+            {% endfor %}
+      </tr>
+      {% endfor %}
+    <tr>
+  </tbody>
+</table>
+    <script>
+        
+        var columns = [
+            {
+                field: '姓名',
+                title: '姓名'
+            },
+            {% for day in days %}
+            {
+                field: {{day}},
+                title: {{day}}
+            },
+            {% endfor %}
+        ]
+
+
+        
+        $('#rank').bootstrapTable({
+            columns: columns,
+        });
+        $('#rank').on('click-cell.bs.table', function (e, field, value, row, $element) {
+            console.log(row['姓名'], field);
+            url = "http://106.12.165.154:8002/get_image?day=" + field + "&name=" + row['姓名']
+            console.log(url)
+            if (value == "已打卡"){
+                window.open(url)
+            }
+        }) 
+    </script>
+</body>
+</html>
